@@ -3,6 +3,7 @@ package com.example.data.model.typeDocument
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.domain.entity.TypeOfDocument
 
 @Entity(
     tableName = "type_of_document",
@@ -27,9 +28,25 @@ import androidx.room.PrimaryKey
 data class TypeOfDocumentEntity(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "document_type_key") val docTypeKey: String,
-    @ColumnInfo(name = "owner_id") val ownerId: Long,
-    @ColumnInfo(name = "description") val description: Long,
-)
+    @ColumnInfo(name = "owner_id") var ownerId: Long,
+    @ColumnInfo(name = "description") val description: String,
+) {
+    fun toTypeOfDocument(): TypeOfDocument = TypeOfDocument(
+        id = id,
+        docTypeKey = docTypeKey,
+        ownerId = ownerId,
+        description = description,
+    )
+
+    companion object {
+        fun fromTypeToEntity(typeOfDocument: TypeOfDocument) = TypeOfDocumentEntity(
+            id = 0, // SQLite generates identifier automatically if ID = 0
+            docTypeKey = typeOfDocument.docTypeKey,
+            ownerId = typeOfDocument.ownerId,
+            description = typeOfDocument.description,
+        )
+    }
+}
 //    foreignKeys = [
 //        ForeignKey(
 //            entity = WarehouseEntity::class,

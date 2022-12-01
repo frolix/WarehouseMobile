@@ -1,7 +1,6 @@
 package com.example.data.di
 
 import android.content.Context
-import com.example.data.BuildConfig
 import com.example.data.network.BaseApi
 import com.example.data.network.RemoteDataSource
 import com.example.data.network.TokenAuthenticator
@@ -15,7 +14,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Authenticator
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -62,11 +60,11 @@ class DataModule {
                 }.build())
             }.also { client ->
                 authenticator?.let { client.authenticator(it) }
-                if (BuildConfig.DEBUG) {
-                    val logging = HttpLoggingInterceptor()
-                    logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-                    client.addInterceptor(logging)
-                }
+//                if (BuildConfig.DEBUG) {
+//                    val logging = HttpLoggingInterceptor()
+//                    logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+//                    client.addInterceptor(logging)
+//                }
             }.build()
     }
 

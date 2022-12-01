@@ -5,14 +5,14 @@ import androidx.room.Relation
 import com.example.data.model.typeDocument.TypeOfDocumentEntity
 import com.example.data.model.warehouse.WarehouseEntity
 
-data class DocumentWarehouseType(
+data class DocumentWarehouseTypeTuple(
     @Embedded val documentEntity: DocumentEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "ownerId"
+        entityColumn = "owner_id"
     ) val warehouseEntity: WarehouseEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "ownerId"
+        entityColumn = "owner_id"
     ) val typeOfDocumentEntity: TypeOfDocumentEntity
 )

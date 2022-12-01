@@ -2,10 +2,8 @@ package com.example.data.model.documents
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.example.data.model.typeDocument.TypeOfDocumentEntity
-import com.example.data.model.warehouse.WarehouseEntity
+import com.example.domain.entity.Document
 
 @Entity(
     tableName = "document_list",
@@ -34,4 +32,23 @@ data class DocumentEntity(
 //    @ColumnInfo(name = "warehouse") val warehouse: Long,// foreign key++
     @ColumnInfo(name = "data") val data: String,
 //    @ColumnInfo(name = "document_type") val documentType: String,// foreign key
-)
+) {
+    fun toDocument(): Document = Document(
+        id = id,
+        documentKey = documentKey,
+        number = number,
+        comment = comment,
+        data = data
+    )
+
+    companion object {
+        fun fromDocumentToEntity(document: Document) = DocumentEntity(
+            id = 0, // SQLite generates identifier automatically if ID = 0
+            documentKey = document.documentKey,
+            number = document.number,
+            comment = document.comment,
+            data = document.data
+        )
+    }
+
+}

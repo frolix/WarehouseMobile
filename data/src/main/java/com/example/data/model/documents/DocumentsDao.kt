@@ -3,16 +3,17 @@ package com.example.data.model.documents
 import androidx.room.*
 import com.example.data.model.typeDocument.TypeOfDocumentEntity
 import com.example.data.model.warehouse.WarehouseEntity
+import kotlinx.coroutines.flow.Flow
 
 //todo #DocumentsDao need realise
 @Dao
 interface DocumentsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertDocument(vararg document: DocumentEntity)
+    suspend fun insertDocument(document: DocumentEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertDocWarehouseType(
+    suspend fun insertDocWarehouseType(
         document: DocumentEntity,
         warehouseEntity: WarehouseEntity,
         typeOfDocumentEntity: TypeOfDocumentEntity
@@ -20,19 +21,19 @@ interface DocumentsDao {
 
     @Transaction
     @Query("SELECT * FROM document_list")
-    fun getDocumentWarehouseType(): List<DocumentWarehouseType>
+    fun getDocumentWarehouseType(): Flow<List<DocumentWarehouseTypeTuple>>
 
     @Transaction
     @Query("SELECT * FROM document_list")
-    fun getDocumentWithProduct(): List<DocumentProdAndSerial>
+    fun getDocumentWithProduct(): Flow<List<DocumentProdAndSerialTuple>>
 
     @Transaction
     @Query("SELECT * FROM document_list WHERE document_list.id = :documentId ")
-    fun getDocumentWithProductById(documentId: Long): DocumentProdAndSerial
+    fun getDocumentWithProductById(documentId: Long): Flow<DocumentProdAndSerialTuple?>
 
     @Transaction
     @Query("SELECT * FROM document_list WHERE document_list.id = :documentId ")
-    fun getDocumentById(documentId: Long): DocumentWarehouseType
+    fun getDocumentById(documentId: Long): Flow<DocumentWarehouseTypeTuple?>
 
 
 }

@@ -11,10 +11,10 @@ interface TypeOfDocumentDao {
     suspend fun insertTypeOfDocument(typeOfDocumentEntity: TypeOfDocumentEntity)
 
     @Query("SELECT * FROM type_of_document WHERE id = :typeId")
-    fun getWarehouseById(typeId: Long): TypeOfDocumentEntity?
+    fun getTypeOfDocById(typeId: Long): Flow<TypeOfDocumentEntity?>
 
     @Transaction
     @Query("SELECT * FROM type_of_document WHERE type_of_document.document_type_key = :typeKey")
-    fun getWarehouseByKey(typeKey: String): Flow<List<TypeOfDocumentEntity>?>
+    fun getTypeOfDocByKey(typeKey: String): Flow<List<TypeOfDocumentEntity>?>
 
 }

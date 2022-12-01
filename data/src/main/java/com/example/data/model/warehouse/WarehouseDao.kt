@@ -10,7 +10,7 @@ interface WarehouseDao {
     suspend fun insertWarehouse(warehouseEntity: WarehouseEntity)
 
     @Query("SELECT * FROM warehouse_list WHERE id = :warehouseId")
-    fun getWarehouseById(warehouseId: Long): WarehouseEntity?
+    fun getWarehouseById(warehouseId: Long): Flow<WarehouseEntity?>
 
     @Transaction
     @Query("SELECT * FROM warehouse_list WHERE warehouse_list.warehouse_key = :warehouseKey")

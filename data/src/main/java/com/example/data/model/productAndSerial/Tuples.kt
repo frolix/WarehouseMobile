@@ -9,6 +9,15 @@ data class ProductAndSerialById(
     @Embedded val productEntity: ProductEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "ownerId"
+        entityColumn = "owner_id"
+    ) val serialListEntity: List<SerialEntity>,
+)
+
+
+data class ProductAndSerial(
+    @Embedded val productEntity: ProductEntity,
+    @Relation(
+        parentColumn = "product_key",
+        entityColumn = "owner_key"
     ) val serialListEntity: List<SerialEntity>,
 )

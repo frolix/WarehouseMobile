@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e01e4f180a129dfc1a77d373ecb15b76",
+    "identityHash": "b351664eba155f80062ddd5fc44216ae",
     "entities": [
       {
         "tableName": "accounts",
@@ -88,7 +88,7 @@
       },
       {
         "tableName": "product_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `document_key` INTEGER NOT NULL, `document_key_string` TEXT NOT NULL, `description` TEXT NOT NULL, `code` TEXT NOT NULL, `product_key` TEXT NOT NULL, `count` REAL NOT NULL, `count_plan` REAL NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `document_key` INTEGER NOT NULL, `document_key_string` TEXT NOT NULL, `description` TEXT NOT NULL, `code` TEXT NOT NULL, `product_key` TEXT NOT NULL, `product_id` INTEGER NOT NULL, `count` REAL NOT NULL, `count_plan` REAL NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -127,13 +127,19 @@
             "notNull": true
           },
           {
+            "fieldPath": "productId",
+            "columnName": "product_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "count",
             "columnName": "count",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "count_plan",
+            "fieldPath": "countPlan",
             "columnName": "count_plan",
             "affinity": "REAL",
             "notNull": true
@@ -150,7 +156,7 @@
       },
       {
         "tableName": "type_of_document",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `document_type_key` TEXT NOT NULL, `owner_id` INTEGER NOT NULL, `description` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `document_type_key` TEXT NOT NULL, `owner_id` INTEGER NOT NULL, `description` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -173,7 +179,7 @@
           {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -188,7 +194,7 @@
       },
       {
         "tableName": "serial_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serial_key` TEXT NOT NULL, `document_key` INTEGER NOT NULL, `document_key_string` TEXT NOT NULL, `owner_key` TEXT NOT NULL, `description` TEXT NOT NULL, `serialNumber` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serial_key` TEXT NOT NULL, `document_id` INTEGER NOT NULL, `document_key_string` TEXT NOT NULL, `owner_key` TEXT NOT NULL, `owner_id` INTEGER NOT NULL, `description` TEXT NOT NULL, `serialNumber` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -203,8 +209,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "documentKey",
-            "columnName": "document_key",
+            "fieldPath": "documentId",
+            "columnName": "document_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -218,6 +224,12 @@
             "fieldPath": "ownerKey",
             "columnName": "owner_key",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownerId",
+            "columnName": "owner_id",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -244,7 +256,7 @@
       },
       {
         "tableName": "warehouse_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `warehouse_key` INTEGER NOT NULL, `owner_key` INTEGER NOT NULL, `description` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `warehouse_key` TEXT NOT NULL, `owner_id` INTEGER NOT NULL, `description` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -255,19 +267,19 @@
           {
             "fieldPath": "warehouseKey",
             "columnName": "warehouse_key",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "ownerId",
-            "columnName": "owner_key",
+            "columnName": "owner_id",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -284,7 +296,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e01e4f180a129dfc1a77d373ecb15b76')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b351664eba155f80062ddd5fc44216ae')"
     ]
   }
 }
