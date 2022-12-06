@@ -1,12 +1,11 @@
 package com.example.data.repository
 
 import android.database.sqlite.SQLiteConstraintException
-import com.example.data.model.accounts.AccountsDao
 import com.example.data.model.documents.DocumentEntity
 import com.example.data.model.documents.DocumentsDao
 import com.example.data.model.productAndSerial.ProductAndSerialsDao
-import com.example.data.model.productAndSerial.products.ProductDao
-import com.example.data.model.productAndSerial.serials.SerialDao
+import com.example.data.model.productAndSerial.products.ProductEntity
+import com.example.data.model.productAndSerial.serials.SerialEntity
 import com.example.data.model.typeDocument.TypeOfDocumentDao
 import com.example.data.model.typeDocument.TypeOfDocumentEntity
 import com.example.data.model.warehouse.WarehouseDao
@@ -18,20 +17,18 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RoomRepositoryImpl @Inject constructor(
-    val accountsDao: AccountsDao,
-    val productDao: ProductDao,
+//    val accountsDao: AccountsDao,
+//    val productDao: ProductDao,
     val documentsDao: DocumentsDao,
-    val serialDao: SerialDao,
+//    val serialDao: SerialDao,
     val productAndSerialsDao: ProductAndSerialsDao,
     val typeOfDocumentDao: TypeOfDocumentDao,
     val warehouseDao: WarehouseDao
-
 ) : RoomRepository {
 
     override suspend fun insertDocument(document: Document) {
         val entity = DocumentEntity.fromDocumentToEntity(document)
         documentsDao.insertDocument(entity)
-
     }
 
     override suspend fun insertDocWarehouseType(
@@ -55,14 +52,15 @@ class RoomRepositoryImpl @Inject constructor(
         }
     }
 
+
     override suspend fun getDocumentWarehouseType(): Flow<List<DocumentWarehouseType>> {
         return documentsDao.getDocumentWarehouseType()
             .map { documentWarehouseType ->
                 documentWarehouseType.map { documentWarehouseTypeTuple ->
                     DocumentWarehouseType(
                         documentWarehouseTypeTuple.documentEntity.toDocument(),
-                        documentWarehouseTypeTuple.warehouseEntity.toWarehouse(),
-                        documentWarehouseTypeTuple.typeOfDocumentEntity.toTypeOfDocument()
+                        documentWarehouseTypeTuple.warehouseEntity?.toWarehouse(),
+                        documentWarehouseTypeTuple.typeOfDocumentEntity?.toTypeOfDocument()
                     )
                 }
             }
@@ -116,24 +114,49 @@ class RoomRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun insertProduct(vararg product: Product) {
-        TODO("Not yet implemented")
+    override suspend fun insertProduct(documentId: Long, product: List<Product>) {
+        product.forEach {
+            val entity = ProductEntity.fromProductToEntity(it)
+            productAndSerialsDao.insertProduct(entity)
+        }
     }
 
-    override suspend fun insertSerial(vararg serial: Serial) {
-        TODO("Not yet implemented")
+    override suspend fun insertSerial(serials: List<Serial>, documentId: Long) {
+        serials.forEach {
+            val entity = SerialEntity.fromSerialToEntity(it)
+            productAndSerialsDao.insertSerial(entity)
+        }
     }
 
-    override suspend fun insertProductAndSerial(product: Product, serial: Serial) {
-        TODO("Not yet implemented")
+    override suspend fun insertProductAndSerial(
+        product: Product,
+        serial: List<Serial>,
+        documentId: Long
+    ) {
+        var entityProduct = ProductEntity.fromProductToEntity(product)
+        var serialList: List<SerialEntity> = serial.map {
+            SerialEntity.fromSerialToEntity(it)
+        }
+        productAndSerialsDao.insertProductAndSerial(entityProduct, serialList)
+
     }
 
-    override suspend fun getProductsWithSerial(): Flow<List<ProductAndSerial>> {
-        TODO("Not yet implemented")
+    override suspend fun getProductsWithSerial(documentId: Long): Flow<List<ProductAndSerial>> {
+        return productAndSerialsDao.getProductAndSerials(documentId).map { prodAndSerialTuple ->
+            prodAndSerialTuple.map { prodAndSerial ->
+                ProductAndSerial(
+                    productEntity = prodAndSerial.productEntity.toProduct(),
+                    serialListEntity = prodAndSerial.serialListEntity.map {
+                        it.toSerials()
+                    }
+                )
+            }
+        }
     }
 
     override suspend fun insertTypeOfDocument(typeOfDocument: TypeOfDocument) {
-        TODO("Not yet implemented")
+        val entity = TypeOfDocumentEntity.fromTypeToEntity(typeOfDocument)
+        typeOfDocumentDao.insertTypeOfDocument(entity)
     }
 
     override suspend fun getTypeOfDocById(typeId: Long): Flow<TypeOfDocument?> {
@@ -145,7 +168,9 @@ class RoomRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertWarehouse(warehouse: Warehouse) {
-        TODO("Not yet implemented")
+        var entity = WarehouseEntity.fromWarehouseToEntity(warehouse)
+        warehouseDao.insertWarehouse(entity)
+
     }
 
     override suspend fun getWarehouseById(typeId: Long): Flow<Warehouse?> {

@@ -45,4 +45,18 @@ data class SerialEntity(
         description = description,
         serialNumber = serialNumber,
     )
+
+    companion object {
+        fun fromSerialToEntity(serial: Serial) = SerialEntity(
+            id = 0, // SQLite generates identifier automatically if ID = 0
+            serialKey = serial.serialKey,
+            documentId = serial.documentId,
+            documentKeyString = serial.documentKeyString,
+            ownerKey = serial.ownerKey,
+            ownerId = serial.ownerId,
+            description = serial.description,
+            serialNumber = serial.serialNumber,
+        )
+    }
+
 }

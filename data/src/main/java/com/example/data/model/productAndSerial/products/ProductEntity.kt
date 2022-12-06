@@ -3,7 +3,6 @@ package com.example.data.model.productAndSerial.products
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.domain.entity.Document
 import com.example.domain.entity.Product
 
 @Entity(
@@ -35,7 +34,7 @@ data class ProductEntity(
     @ColumnInfo(name = "product_id") val productId: Long,
     @ColumnInfo(name = "count") val count: Float,
     @ColumnInfo(name = "count_plan") val countPlan: Float,
-){
+) {
     fun toProduct(): Product = Product(
         id = id,
         documentKey = documentKey,
@@ -47,5 +46,20 @@ data class ProductEntity(
         count = count,
         countPlan = countPlan,
     )
+
+
+    companion object {
+        fun fromProductToEntity(product: Product) = ProductEntity(
+            id = 0, // SQLite generates identifier automatically if ID = 0
+            documentKey = product.documentKey,
+            documentKeyString = product.documentKeyString,
+            description = product.description,
+            code = product.code,
+            productKey = product.productKey,
+            productId = product.productId,
+            count = product.count,
+            countPlan = product.countPlan,
+        )
+    }
 
 }

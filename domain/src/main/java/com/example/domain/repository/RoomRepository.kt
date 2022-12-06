@@ -22,15 +22,15 @@ interface RoomRepository {
     suspend fun getDocumentById(documentId: Long): Flow<DocumentWarehouseType?>
 
     ////
-    suspend fun insertProduct(vararg product: Product)
+    suspend fun insertProduct(documentId: Long, product: List<Product>)
 
-    suspend fun insertSerial(vararg serial: Serial)
+    suspend fun insertSerial(serial: List<Serial>, documentId: Long)
 
     suspend fun insertProductAndSerial(
-        product: Product, serial: Serial,
+        product: Product, serial: List<Serial>, documentId: Long
     )
 
-    suspend fun getProductsWithSerial(): Flow<List<ProductAndSerial>>
+    suspend fun getProductsWithSerial(documentId: Long): Flow<List<ProductAndSerial>>
 
     ////
     suspend fun insertTypeOfDocument(typeOfDocument: TypeOfDocument)

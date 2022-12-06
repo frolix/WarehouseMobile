@@ -14,7 +14,7 @@ data class ProductAndSerialById(
 )
 
 
-data class ProductAndSerial(
+data class ProductAndSerialTuples(
     @Embedded val productEntity: ProductEntity,
     @Relation(
         parentColumn = "product_key",

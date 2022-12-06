@@ -12,13 +12,17 @@ interface ProductAndSerialsDao {
     fun insertProduct(vararg productEntity: ProductEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSerial(serialEntity: SerialEntity)
+    fun insertSerial(vararg serialEntity: SerialEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertProductAndSerial(
         productEntity: ProductEntity,
-        serialEntity: SerialEntity
+        serialEntity: List<SerialEntity>
     )
+
+    @Transaction
+    @Query("SELECT * FROM product_list WHERE product_list.document_key = :documentId ")
+    fun getProductAndSerials(documentId: Long): Flow<List<ProductAndSerialTuples>>
 
     @Transaction
     @Query("SELECT * FROM document_list")

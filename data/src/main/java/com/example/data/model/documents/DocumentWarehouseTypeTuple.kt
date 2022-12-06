@@ -10,9 +10,9 @@ data class DocumentWarehouseTypeTuple(
     @Relation(
         parentColumn = "id",
         entityColumn = "owner_id"
-    ) val warehouseEntity: WarehouseEntity,
+    ) val typeOfDocumentEntity: TypeOfDocumentEntity?,
     @Relation(
         parentColumn = "id",
         entityColumn = "owner_id"
-    ) val typeOfDocumentEntity: TypeOfDocumentEntity
+    ) val warehouseEntity: WarehouseEntity?,
 )
