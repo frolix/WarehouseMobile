@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface DocumentsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDocument(document: DocumentEntity)
+    suspend fun insertDocument(document: DocumentEntity): Long?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDocWarehouseType(
@@ -18,6 +18,11 @@ interface DocumentsDao {
         warehouseEntity: WarehouseEntity,
         typeOfDocumentEntity: TypeOfDocumentEntity
     )
+
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertDocWarehouseTypeOne(
+//        documentWarehouseType: DocumentWarehouseTypeTuple
+//    )
 
     @Transaction
     @Query("SELECT * FROM document_list")

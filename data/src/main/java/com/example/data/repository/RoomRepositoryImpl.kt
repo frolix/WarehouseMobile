@@ -1,6 +1,8 @@
 package com.example.data.repository
 
 import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
+import com.example.data.model.ExceptionInsert
 import com.example.data.model.documents.DocumentEntity
 import com.example.data.model.documents.DocumentsDao
 import com.example.data.model.productAndSerial.ProductAndSerialsDao
@@ -25,10 +27,16 @@ class RoomRepositoryImpl @Inject constructor(
     val typeOfDocumentDao: TypeOfDocumentDao,
     val warehouseDao: WarehouseDao
 ) : RoomRepository {
+    private val TAG = "RoomRepositoryImpl"
 
     override suspend fun insertDocument(document: Document) {
         val entity = DocumentEntity.fromDocumentToEntity(document)
-        documentsDao.insertDocument(entity)
+        var insert = documentsDao.insertDocument(entity)
+
+
+        if (insert != null) {
+            Log.d(TAG, "insertDocument: ")
+        }
     }
 
     override suspend fun insertDocWarehouseType(
@@ -38,15 +46,26 @@ class RoomRepositoryImpl @Inject constructor(
     ) {
         try {
             val entityDocument = DocumentEntity.fromDocumentToEntity(document)
-            val entityWarehouse = WarehouseEntity.fromWarehouseToEntity(warehouse)
-//            entityWarehouse.ownerId = entityDocument.id
-            val entityTypeOfDocument = TypeOfDocumentEntity.fromTypeToEntity(typeOfDocument)
-//            entityTypeOfDocument.ownerId = entityDocument.id
-            documentsDao.insertDocWarehouseType(
-                entityDocument,
-                entityWarehouse,
-                entityTypeOfDocument
-            )
+//            Log.d(TAG, "insertDocWarehouseType:entityDocument $entityDocument")
+//            val entity = DocumentEntity.fromDocumentToEntity(document)
+            var insert = documentsDao.insertDocument(entityDocument)
+            Log.d(TAG, "insert doc id: $insert")
+            insert = null
+            if (insert != null) {
+                val entityWarehouse = WarehouseEntity.fromWarehouseToEntity(warehouse)
+//                Log.d(TAG, "insertDocWarehouseType:entityWarehouse $entityWarehouse")
+
+                entityWarehouse.ownerId = insert
+                val entityTypeOfDocument = TypeOfDocumentEntity.fromTypeToEntity(typeOfDocument)
+//                Log.d(TAG, "insertDocWarehouseType:entityTypeOfDocument $entityTypeOfDocument")
+                entityTypeOfDocument.ownerId = insert
+
+                warehouseDao.insertWarehouse(entityWarehouse)
+                typeOfDocumentDao.insertTypeOfDocument(entityTypeOfDocument)
+
+            } else {
+                throw ExceptionInsert()
+            }
         } catch (e: SQLiteConstraintException) {
             throw e
         }
